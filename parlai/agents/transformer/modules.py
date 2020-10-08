@@ -17,6 +17,7 @@ literature (BERT and XLM; https://arxiv.org/abs/1901.07291).
 """
 
 import math
+import timeit
 from typing import Dict, Tuple, Optional, Union
 
 import numpy as np
@@ -989,12 +990,15 @@ class TransformerDecoderLayer(nn.Module):
             x = _normalize(x, self.norm1)
 
         # don't peak into the future!
+        start_time = timeit.default_timer()
         x, final_self_attn_incr_state = self.self_attention(
             query=x,
             mask=decoder_mask,
             incr_state=incr_state.get('self_attn'),
             static_kv=False,
         )
+        elapsed_time = timeit.default_timer() - start_time
+        print(f'Self-attention time: {elapsed_time*1e3:0.3f} ms')
         x = self.dropout(x)  # --dropout
         x = x + residual
         if self.variant == 'aiayn' or self.variant == 'xlm' or self.variant == 'bart':
@@ -1004,6 +1008,7 @@ class TransformerDecoderLayer(nn.Module):
         # encoder_attn_layer_norm norm 2
         if self.variant == 'prelayernorm':
             x = _normalize(x, self.norm2)
+        start_time = timeit.default_timer()
         x, final_encoder_attn_incr_state = self.encoder_attention(
             query=x,
             key=encoder_output,
@@ -1012,6 +1017,8 @@ class TransformerDecoderLayer(nn.Module):
             incr_state=incr_state.get('encoder_attn'),
             static_kv=True,
         )
+        elapsed_time = timeit.default_timer() - start_time
+        print(f'Enc/dec attention time: {elapsed_time*1e3:0.3f} ms')
         x = self.dropout(x)  # --dropout
         x = residual + x
         if self.variant == 'aiayn' or self.variant == 'xlm' or self.variant == 'bart':
