@@ -53,7 +53,7 @@ def setup_mephisto(launch_config):
         **{
             'provider_type': launch_config.PROVIDER,
             'requester_name': full_requester_name,
-            'datapath': launch_config.DATAPATH,
+            # 'datapath': launch_config.DATAPATH,
         }
     )
 
@@ -69,7 +69,6 @@ def setup_mephisto(launch_config):
         f'--task-source "{TASK_DIRECTORY}/webapp/build/bundle.js" '
         f'--task-reward {launch_config.TASK_REWARD} '
         f'--subtasks-per-unit {launch_config.SUBTASKS_PER_UNIT} '
-        f'--annotation-buckets {launch_config.ANNOTATION_BUCKETS} '
         f'--ask-reason {launch_config.ASK_REASON} '
         f'--task-tags chat,conversation,dialog,partner '
         # How many workers to do each assignment
@@ -91,12 +90,12 @@ def setup_mephisto(launch_config):
     except Exception:
         logging.info(f'Launch config {launch_config} had no ANNOTATION_QUESTION field')
 
-    try:
-        arg_string += (
-            f'--annotation-indices-jsonl {launch_config.ANNOTATION_INDICES_JSONL} '
-        )
-    except Exception:
-        logging.info(f'Launch config {launch_config} had no ANNOTATION_INDICES_JSONL')
+    # try:
+    #     arg_string += (
+    #         f'--annotation-indices-jsonl {launch_config.ANNOTATION_INDICES_JSONL} '
+    #     )
+    # except Exception:
+    #     logging.info(f'Launch config {launch_config} had no ANNOTATION_INDICES_JSONL')
 
     try:
         arg_string += f'--conversation-count {launch_config.CONVERSATION_COUNT} '

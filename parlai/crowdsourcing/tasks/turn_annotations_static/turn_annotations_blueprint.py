@@ -251,7 +251,7 @@ class TurnAnnotationsStaticBlueprint(StaticReactBlueprint):
                         'text': full_turn[0]['text'],
                         'agent_idx': 0,
                         'do_annotate': do_annotate,
-                        'other_metadata': full_turn[0]['other_metadata'],
+                        'other_metadata': full_turn[0].get('other_metadata'),
                     }
                 )
                 adjusted_turn_idx += 1
@@ -264,7 +264,7 @@ class TurnAnnotationsStaticBlueprint(StaticReactBlueprint):
                         'text': full_turn[1]['text'],
                         'agent_idx': 1,
                         'do_annotate': do_annotate,
-                        'other_metadata': full_turn[1]['other_metadata'],
+                        'other_metadata': full_turn[1].get('other_metadata'),
                     }
                 )
                 adjusted_turn_idx += 1
