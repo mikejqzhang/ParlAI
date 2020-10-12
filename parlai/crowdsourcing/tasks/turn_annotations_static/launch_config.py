@@ -17,8 +17,8 @@ class LaunchConfig:
     # mephisto register mturk_sandbox --name:XXXX
     # --access-key-id:XXXX --secret-access-key:XXXX
     # To run locally, set REQUEST = None and PROVIDER = 'mock'
-    REQUESTER = 'FIXME'
-    PROVIDER = 'mturk_sandbox'
+    REQUESTER = None
+    PROVIDER = 'mock'
 
     # This datapath is where the database object goes
     # If not Mephisto data path below then requester register seems to do nothing
@@ -34,7 +34,7 @@ class LaunchConfig:
     <br><br>
       '''
 
-    FILE_DATA_JSONL = 'FIXME'
+    FILE_DATA_JSONL = '/checkpoint/ems/2020_multimodal_blender/q_function/for_fast_acute/results_20200904_153005_live_dialogpt.json'
 
     TASK_REWARD = 0.3
     SUBTASKS_PER_UNIT = 6
@@ -50,4 +50,6 @@ class LaunchConfig:
 
     # Blueprint specific params
     ASK_REASON = False
-    ANNOTATION_INDICES_JSONL = None
+    # ANNOTATION_INDICES_JSONL = None
+
+    TASK_NAME = 'turn_annotations_static'
