@@ -34,7 +34,8 @@ class LaunchConfig:
     <br><br>
       '''
 
-    FILE_DATA_JSONL = '/checkpoint/ems/2020_multimodal_blender/q_function/for_fast_acute/results_20200904_153005_live_dialogpt.json._first4_only'
+    FILE_DATA_JSONL = '/checkpoint/ems/2020_multimodal_blender/q_function/for_fast_acute/results_20200904_153005_live_dialogpt.json'
+    # FILE_DATA_JSONL = '/checkpoint/ems/2020_multimodal_blender/q_function/for_fast_acute/results_20200904_153005_live_dialogpt.json._first4_only'
 
     TASK_REWARD = 0.3
     SUBTASKS_PER_UNIT = 6
@@ -52,4 +53,4 @@ class LaunchConfig:
     ASK_REASON = False
     # ANNOTATION_INDICES_JSONL = None
 
-    TASK_NAME = 'turn_annotations_static'
+    TASK_NAME = 'turn_annotations_static_foo'
