@@ -63,7 +63,7 @@ class TurnAnnotationsStaticBlueprint(StaticReactBlueprint):
             ) as f:
                 line = f.readline()
                 while line:
-                    conversation_indices = json.loads(line)
+                    conversation_indices = json.loads(line)['data']
                     self.annotation_indices.append(conversation_indices)
                     line = f.readline()
             if len(self.annotation_indices) != len(self.raw_data):
@@ -130,7 +130,10 @@ class TurnAnnotationsStaticBlueprint(StaticReactBlueprint):
             "--annotation-indices-jsonl",
             dest="annotation_indices_jsonl",
             type=str,
-            default=None,
+            # default=None,
+            default=os.path.join(
+                get_task_path(), 'task_config/annotation_indices_example.jsonl'
+            ),
             help="Specify which utterance indices to annotate per conversation in a JSONL file. Must be same length as conversations data-jsonl file. See example file in task_config/annotation_indices_example.jsonl",
         )
         group.add_argument(
