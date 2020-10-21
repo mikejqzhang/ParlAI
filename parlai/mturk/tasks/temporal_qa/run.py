@@ -2,7 +2,7 @@
 
 # Copyright (c) Facebook, Inc. and its affiliates.
 # This source code is licensed under the MIT license found in the
-# LICENSE file in the root directory of this source tree.
+# LICENSE file in the root directory of this source tree. from typing import Dict, List, Set, Any
 from typing import Dict, List, Set, Any
 import json
 import os
@@ -51,24 +51,6 @@ def add_args(from_argv=False):
         default=DEFAULT_TASK_CONFIG,
         help='dict with keys "hit_title", "hit_description", "hit_keywords", '
         'determining how task is displayed on MTurk site',
-    )
-    argparser.add_argument(
-        '--s1-choice',
-        type=str,
-        default='I would prefer to talk to <Speaker 1>',
-        help='text next to speaker 1 radio button',
-    )
-    argparser.add_argument(
-        '--s2-choice',
-        type=str,
-        default='I would prefer to talk to <Speaker 2>',
-        help='text next to speaker 2 radio button',
-    )
-    argparser.add_argument(
-        '--question',
-        type=str,
-        default='Who would you prefer to talk to for a long conversation?',
-        help='question to present to turker for comparison (e.g. "Which speaker is better?")',
     )
     argparser.add_argument(
         '--block-on-onboarding-fail',
@@ -158,7 +140,7 @@ class AcuteEvaluator(object):
             worker_id,
             {
                 'tasks_completed': [],
-                'conversations_seen': [],
+                # 'conversations_seen': [],
                 'onboarding_todo': onboarding_todo,
             },
         )
@@ -175,7 +157,6 @@ class AcuteEvaluator(object):
                 'task': os.path.basename(os.path.dirname(os.path.abspath(__file__))),
                 'task_description': {
                     'num_subtasks': self.opt['subtasks_per_hit'],
-                    'question': self.opt['question'],
                 },
                 'frontend_version': 1,
             }
@@ -212,41 +193,10 @@ class AcuteEvaluator(object):
         with open(pairs_path) as pf:
             for i, l in enumerate(pf.readlines()):
                 convo_pair = json.loads(l.strip())
-                # eval_speakers = [
-                #     s
-                #     for d in convo_pair['dialogue_dicts']
-                #     for s in d['speakers']
-                #     if s in convo_pair['speakers_to_eval']
-                # ]
-                # # make sure order is preserved
-                # assert eval_speakers == convo_pair['speakers_to_eval']
-                # model_left_idx = random.choice([0, 1])
-                # task = {
-                #     'task_specs': {
-                #         's1_choice': self.opt['s1_choice'],
-                #         's2_choice': self.opt['s2_choice'],
-                #         'question': self.opt['question'],
-                #         'is_onboarding': convo_pair['is_onboarding'],
-                #         'model_left': {
-                #             'name': eval_speakers[model_left_idx],
-                #             'dialogue': convo_pair['dialogue_dicts'][model_left_idx][
-                #                 'dialogue'
-                #             ],
-                #         },
-                #         'model_right': {
-                #             'name': eval_speakers[1 - model_left_idx],
-                #             'dialogue': convo_pair['dialogue_dicts'][
-                #                 1 - model_left_idx
-                #             ]['dialogue'],
-                #         },
-                #     },
-                #     'pairing_dict': convo_pair,
-                #     'pair_id': i,
-                # }
                 task = {
                     'task_specs': {
                         'is_onboarding': convo_pair['is_onboarding'],
-                        'messagges': convo_pair['messages']
+                        'messages': convo_pair['messages']
                     },
                     'pairing_dict': convo_pair,
                     'pair_id': i,
@@ -265,15 +215,6 @@ class AcuteEvaluator(object):
             random.shuffle(all_task_keys)
             for p_id in all_task_keys:
                 self.task_queue.put(self.desired_tasks[p_id])
-
-    def _get_dialogue_ids(self, task: Dict[str, Any]) -> List[int]:
-        """
-        Return the ids for the dialogues corresponding to a given task.
-
-        :return dialogue_ids:
-            A list of two ids which correspond to the id for each conversation
-        """
-        return task['pairing_dict']['dialogue_ids']
 
     def _poll_task_queue(
         self, worker_id: str, task_data: List[Dict[str, Any]]
@@ -300,15 +241,10 @@ class AcuteEvaluator(object):
             num_attempts += 1
 
             pair_id = next_task['pair_id']
-            dialogue_ids = self._get_dialogue_ids(next_task)
 
-            # make sure worker has not seen these conversations before
-            if pair_id not in worker_data['tasks_completed'] and all(
-                d_id not in worker_data['conversations_seen'] for d_id in dialogue_ids
-            ):
+            if pair_id not in worker_data['tasks_completed']:
                 # track tasks and conversations seen
                 worker_data['tasks_completed'].append(pair_id)
-                worker_data['conversations_seen'].extend(dialogue_ids)
                 task_data.append(next_task)
                 if len(task_data) == self.opt['subtasks_per_hit']:
                     return task_data
@@ -344,23 +280,13 @@ class AcuteEvaluator(object):
             for t_id in range(len(self.desired_tasks))
             if t_id not in worker_data['tasks_completed']
         ]
-        # get any pairings with conversations this worker has not seen to fill this hit
-        additional_tasks = [
-            t
-            for t in tasks_remaining
-            if all(
-                d_id not in worker_data['conversations_seen']
-                for d_id in self._get_dialogue_ids(self.desired_tasks[t])
-            )
-        ]
+
+        additional_tasks = tasks_remaining
         if tasks_still_needed < len(additional_tasks):
             additional_tasks = random.sample(additional_tasks, tasks_still_needed)
         worker_data['tasks_completed'].extend(additional_tasks)
 
         for t in additional_tasks:
-            worker_data['conversations_seen'].extend(
-                self._get_dialogue_ids(self.desired_tasks[t])
-            )
             task_data.append(self.desired_tasks[t])
 
         return task_data
@@ -417,8 +343,6 @@ class AcuteEvaluator(object):
                 self.task_queue.put(subtask_data)
                 try:
                     worker_data['tasks_completed'].remove(subtask_data['pair_id'])
-                    for d_id in self._get_dialogue_ids(subtask_data):
-                        worker_data['conversations_seen'].remove(d_id)
                 except ValueError:
                     # Task may have shown up in worker's task queue twice
                     # due to some unfortunate race condition
@@ -573,3 +497,4 @@ if __name__ == '__main__':
     args = add_args(from_argv=True)
     runner = AcuteEvaluator(args)
     runner.run()
+

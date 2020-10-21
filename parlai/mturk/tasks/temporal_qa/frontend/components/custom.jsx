@@ -557,7 +557,18 @@ class TaskDescription extends React.Component {
 class MessageList extends React.Component {
   makeMessages() {
     let agent_id = this.props.agent_id;
-    let messages = this.props.messages;
+    if (this.props.task_data.task_specs === undefined) {
+      return (
+        <div>
+          <p> Loading Questions </p>
+        </div>
+      );
+    }
+    let task_data = this.props.task_data;
+    console.log("TASK_DATA")
+    console.log(task_data)
+    let messages = task_data.task_specs.messages;
+    // let messages = this.props.messages;
     // Handles rendering messages from both the user and anyone else
     // on the thread - agent_ids for the sender of a message exist in
     // the m.id field.
@@ -572,13 +583,13 @@ class MessageList extends React.Component {
           is_self={m.id == agent_id}
           agent_id={m.id}
           message={m.text}
-          task_data={m.task_data}
-          message_id={m.message_id}
-          duration={this.props.is_review ? m.duration : undefined}
         />
       </div>
     ));
   }
+          // task_data={m.task_data}
+          // message_id={m.message_id}
+          // duration={this.props.is_review ? m.duration : undefined}
 
   render() {
     return (
