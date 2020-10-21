@@ -17,9 +17,9 @@ from parlai.utils.misc import warn_once
 
 
 DEFAULT_TASK_CONFIG = {
-    'hit_title': 'Which Conversational Partner is Better?',
-    'hit_description': 'Evaluate quality of conversations through comparison.',
-    'hit_keywords': 'chat,evaluation,comparison,conversation',
+    'hit_title': 'Does the Answer to this Question Change Over Time?',
+    'hit_description': 'Evaluate whether the answer to a question depends on the when it was asked.',
+    'hit_keywords': 'something,idontknow,key,word',
 }
 
 AGENT_DISPLAY_NAME = 'RatingWorker'

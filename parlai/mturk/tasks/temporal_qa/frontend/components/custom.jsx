@@ -18,7 +18,8 @@ import {
   Input,
   Label,
   Radio,
-  Row
+  Row,
+  Table,
 } from "react-bootstrap";
 import { getCorrectComponent } from "./core_components.jsx";
 import $ from "jquery";
@@ -39,6 +40,11 @@ class EvalResponse extends React.Component {
     this.state = {
       speakerChoice: "",
       recentAnswer0: "",
+      recentAnswer1: "",
+      recentAnswer2: "",
+      recentChange0: "",
+      recentChange1: "",
+      recentChange2: "",
       taskData: [],
       subtaskIndexSeen: 0
     };
@@ -62,6 +68,7 @@ class EvalResponse extends React.Component {
       let response_data = {
         speakerChoice: this.state.speakerChoice,
         recentAnswer0: this.state.recentAnswer0,
+        recentChange0: this.state.recentChange0,
         recentAnswer1: this.state.recentAnswer1,
         recentChange1: this.state.recentChange1,
         recentAnswer2: this.state.recentAnswer2,
@@ -100,6 +107,7 @@ class EvalResponse extends React.Component {
         subtaskIndexSeen: this.props.current_subtask_index,
         speakerChoice: "",
         recentAnswer0: "",
+        recentChange0: "",
         recentAnswer1: "",
         recentChange1: "",
         recentAnswer2: "",
@@ -134,6 +142,22 @@ class EvalResponse extends React.Component {
               onChange={this.handleInputChange}
             />
           </Col>
+          <Col sm={4}>
+            <div>As of when?</div>
+            <FormControl
+              type="text"
+              name="recentChange0"
+              style={{
+                width: "80%",
+                height: "100%",
+                float: "left",
+                fontSize: "16px"
+              }}
+              value={this.state.recentChange0}
+              placeholder="Please enter here..."
+              onChange={this.handleInputChange}
+            />
+          </Col>
         </Row>
         <Row>
           <Col sm={8}>
@@ -153,7 +177,7 @@ class EvalResponse extends React.Component {
             />
           </Col>
           <Col sm={4}>
-            <div>When did the most recent answer change?</div>
+            <div>As of when?</div>
             <FormControl
               type="text"
               name="recentChange1"
@@ -187,7 +211,7 @@ class EvalResponse extends React.Component {
             />
           </Col>
           <Col sm={4}>
-            <div>When did the second most recent answer change?</div>
+            <div>As of when?</div>
             <FormControl
               type="text"
               name="recentChange2"
@@ -355,7 +379,7 @@ class PairwiseEvalPane extends React.Component {
 
 class TaskDescription extends React.Component {
   render() {
-    let header_text = "Does the Answer to this Question Change over Time?";
+    let header_text = "Does the Answer to this Question Change Over Time?";
     if (this.props.task_description === null) {
       return <div>Loading</div>;
     }
@@ -364,81 +388,128 @@ class TaskDescription extends React.Component {
     let question = this.props.task_description.question;
     let content = (
       <div>
-        In this task, you will be provided with a question and you will be asked to
-        determine if its answer has changed in the past or if it's plausible
-        that it will change in the future.
+        In this task, you will be provided with a question and be asked to
+        determine if its answer <b>has ever changed</b> in the past or if it's plausible
+        that it <b>will change</b> in the future.
         <br />
         <br />
-        If the you determine that <div style={button_style}>Yes</div> and the
-        answer to the question has changed, you will be asked to also provide
-        the 3 most recent answers, and the time which they changed.
-        <br />
-        <br />
-        <h3>Explanations and Examples:</h3>
+        To respond, you will select one of
+        the following three options:
         <ul>
           <li>
-            <div style={button_style}>Yes</div>: The answer to this question has
-            changed or likely will change.
-            <ul>
-              <li>
-                who are the players on the toronto maple leafs?
-              </li>
-              <li>
-                what style of art did henri matisse use?
-              </li>
-              <li>
-                what movies has chris colfer been in?
-              </li>
-              <li>
-                who did jeremy lin sign with?
-              </li>
-              <li>
-                what team does terrell owens play for this year?
-              </li>
-              <li>
-                when did carolina hurricanes win the cup?
-              </li>
-              <li>
-                when was the last time the dallas cowboys went to the super bowl?
-              </li>
-              <li>
-                when did kings last win stanley cup?
-              </li>
-              <li>
-                where does kyla ross live?
-              </li>
-              <li>
-                where is the original mona lisa?
-              </li>
-            </ul>
+            <div style={button_style}>Yes</div>: The answer to this question <b>has changed</b> or likely <b>will change</b>.
           </li>
           <li>
-            <div style={button_style}>No</div>: The answer to this question has
-              not changed and is unlikely to change in the future.
+            <div style={button_style}>No</div>: The answer to this question <b>has not changed</b> and <b>is unlikely to change</b> in the future.
           </li>
-            <ul>
-              <li>in which province is johannesburg?</li>
-              <li>where does the spanish language come from?</li>
-              <li>what is british columbia?</li>
-              <li>where did chancellorsville battle take place?</li>
-              <li>what language do they speak in guyana south america?</li>
-              <li>who did the baltimore ravens draft in 2011?</li>
-              <li>who did ronald reagan get shot by?</li>
-              <li>what bible does the catholic church follow?</li>
-              <li>what school did william shakespeare attend?</li>
-              <li>where is pyramids located in egypt?</li>
-            </ul>
           <li>
-            <div style={button_style}>Maybe</div>: This should include questions
-            where the answer can change based on opinion. You may also select
-            this option if you are unsure of the answer.
+            <div style={button_style}>Maybe</div>: This should include questions where the answer <b>changes based on opinion</b>. You may also select this option if you are <b>unsure of the answer</b>.
           </li>
-            <ul>
-              <li>
-              </li>
-            </ul>
         </ul>
-
+        If the you select <div style={button_style}>Yes</div> for the first response,
+        you will also be asked to provide the most recent answers and when they started to apply,
+        up to the third most recent answer.
+        If it's unclear when an answer started to apply, leave the "as of" date blank.
+        <br />
+        In the examples below, the <b>bolded</b> text is what you should provide for
+        second response.
+        <br />
+        <h3>Explanations and Examples:</h3>
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Answer Changes?</th>
+              <th>Explanation</th>
+              <th>Most Recent Answers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>What city is the next winter olympics in?</td>
+              <td><div style={button_style}>Yes</div></td>
+              <td>The Olympics are held in a different city every 4 years</td>
+              <td>
+                <b>Beijing</b> as of <b>2018</b>
+                <br />
+                <b>PyeongChang</b> as of <b>2014</b>
+                <br />
+                <b>Sochi</b> as of <b>2012</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Who does Jeremy Lin play for?</td>
+              <td><div style={button_style}>Yes</div></td>
+              <td>Jeremy Lin has</td>
+              <td>
+                <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
+                <br />
+                <b>Toronto Raptors</b> as of <b>February 13, 2019</b>
+                <br />
+                <b>Atlanta Hawks</b> as of <b>July 13, 2018</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Has the US ever had a female president?</td>
+              <td><div style={button_style}>Yes</div></td>
+              <td>The answer to this question may change in the future.
+                  The "as of" date for the most recent answer should be
+                  left <b>blank</b> since <b>No</b> has always been the answer as of now.
+              </td>
+              <td>
+                <b>No</b> as of <b>___</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Where was Dwight Howard born?</td>
+              <td><div style={button_style}>No</div></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Who did Russians descend from?</td>
+              <td><div style={button_style}>No</div></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>What is British Columbia?</td>
+              <td><div style={button_style}>No</div></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Who did the Baltimore Ravens draft in 2011?</td>
+              <td><div style={button_style}>No</div></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Who was Michael Jackson's best friend?</td>
+              <td><div style={button_style}>Maybe</div></td>
+              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>What is there to do in Laredo TX?</td>
+              <td><div style={button_style}>Maybe</div></td>
+              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Which airport to fly in Rome?</td>
+              <td><div style={button_style}>Maybe</div></td>
+              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>What form of government does Greece use?</td>
+              <td><div style={button_style}>Maybe</div></td>
+              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </Table>
         <b>
           You will do this for {num_subtasks} questions.
           Use the [NEXT] button when you're done with each judgment.
@@ -454,87 +525,133 @@ class TaskDescription extends React.Component {
       }
       let num_subtasks = this.props.num_subtasks;
       let cur_index = this.props.current_subtask_index + 1;
-      // let question = this.props.task_data.task_specs.question;
       content = (
         <div>
           <b>You are currently at comparison {cur_index} / {num_subtasks}{" "}</b>
           <br />
           <br />
-          In this task, you will be provided with a question and you will be asked to
-          determine if its answer has changed in the past or if it's plausible
-          that it will change in the future.
+          In this task, you will be provided with a question and be asked to
+          determine if its answer <b>has ever changed</b> in the past or if it's plausible
+          that it <b>will change</b> in the future.
           <br />
           <br />
-          If the you determine that <div style={button_style}>Yes</div> and the
-          answer to the question has changed, you will be asked to also provide
-          the 3 most recent answers, and the time which they changed.
-          <br />
-          <br />
-          <h3>Explanations and Examples:</h3>
+          To respond, you will select one of
+          the following three options:
           <ul>
             <li>
-              <div style={button_style}>Yes</div>: The answer to this question has
-              changed or likely will change.
-              <ul>
-                <li>
-                  who are the players on the toronto maple leafs?
-                </li>
-                <li>
-                  what style of art did henri matisse use?
-                </li>
-                <li>
-                  what movies has chris colfer been in?
-                </li>
-                <li>
-                  who did jeremy lin sign with?
-                </li>
-                <li>
-                  what team does terrell owens play for this year?
-                </li>
-                <li>
-                  when did carolina hurricanes win the cup?
-                </li>
-                <li>
-                  when was the last time the dallas cowboys went to the super bowl?
-                </li>
-                <li>
-                  when did kings last win stanley cup?
-                </li>
-                <li>
-                  where does kyla ross live?
-                </li>
-                <li>
-                  where is the original mona lisa?
-                </li>
-              </ul>
+              <div style={button_style}>Yes</div>: The answer to this question <b>has changed</b> or likely <b>will change</b>.
             </li>
             <li>
-              <div style={button_style}>No</div>: The answer to this question has
-                not changed and is unlikely to change in the future.
+              <div style={button_style}>No</div>: The answer to this question <b>has not changed</b> and <b>is unlikely to change</b> in the future.
             </li>
-              <ul>
-                <li>in which province is johannesburg?</li>
-                <li>where does the spanish language come from?</li>
-                <li>what is british columbia?</li>
-                <li>where did chancellorsville battle take place?</li>
-                <li>what language do they speak in guyana south america?</li>
-                <li>who did the baltimore ravens draft in 2011?</li>
-                <li>who did ronald reagan get shot by?</li>
-                <li>what bible does the catholic church follow?</li>
-                <li>what school did william shakespeare attend?</li>
-                <li>where is pyramids located in egypt?</li>
-              </ul>
             <li>
-              <div style={button_style}>Maybe</div>: This should include questions
-              where the answer can change based on opinion. You may also select
-              this option if you are unsure of the answer.
+              <div style={button_style}>Maybe</div>: This should include questions where the answer <b>changes based on opinion</b>. You may also select this option if you are <b>unsure of the answer</b>.
             </li>
-              <ul>
-                <li>
-                </li>
-              </ul>
           </ul>
-
+          If the you select <div style={button_style}>Yes</div> for the first response,
+          you will also be asked to provide the most recent answers and when they started to apply,
+          up to the third most recent answer.
+          If it's unclear when an answer started to apply, leave the "as of" date blank.
+          <br />
+          In the examples below, the <b>bolded</b> text is what you should provide for
+          second response.
+          <br />
+          <h3>Explanations and Examples:</h3>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Answer Changes?</th>
+                <th>Explanation</th>
+                <th>Most Recent Answers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>What city is the next winter olympics in?</td>
+                <td><div style={button_style}>Yes</div></td>
+                <td>The Olympics are held in a different city every 4 years</td>
+                <td>
+                  The current answer is <b>Beijing</b> as of <b>2018</b>
+                  <br />
+                  The previous answer was <b>PyeongChang</b> as of <b>2014</b>
+                  <br />
+                  The answer before that was <b>Sochi</b> as of <b>2012</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Who does Jeremy Lin play for?</td>
+                <td><div style={button_style}>Yes</div></td>
+                <td>Jeremy Lin has</td>
+                <td>
+                  The current answer is the <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
+                  <br />
+                  The previous answer was the <b>Toronto Raptors</b> as of <b>February 13, 2019</b>
+                  <br />
+                  The answer before that was <b>Atlanta Hawks</b> as of <b>July 13, 2018</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Has the US ever had a female president?</td>
+                <td><div style={button_style}>Yes</div></td>
+                <td>The answer to this question may change in the future.
+                    The "as of" date for the most recent answer should be
+                    left <b>blank</b> since <b>No</b> has always been the answer as of now.
+                </td>
+                <td>
+                  The current answer is <b>No</b> as of <b>___</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Where was Dwight Howard born?</td>
+                <td><div style={button_style}>No</div></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Who did Russians descend from?</td>
+                <td><div style={button_style}>No</div></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>What is British Columbia?</td>
+                <td><div style={button_style}>No</div></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Who did the Baltimore Ravens draft in 2011?</td>
+                <td><div style={button_style}>No</div></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Who was Michael Jackson's best friend?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>What is there to do in Laredo TX?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Which airport to fly in Rome?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>What form of government does Greece use?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </Table>
           <b>
             You will do this for {num_subtasks} questions.
             Use the [NEXT] button when you're done with each judgment.
@@ -565,10 +682,7 @@ class MessageList extends React.Component {
       );
     }
     let task_data = this.props.task_data;
-    console.log("TASK_DATA")
-    console.log(task_data)
     let messages = task_data.task_specs.messages;
-    // let messages = this.props.messages;
     // Handles rendering messages from both the user and anyone else
     // on the thread - agent_ids for the sender of a message exist in
     // the m.id field.
@@ -587,9 +701,6 @@ class MessageList extends React.Component {
       </div>
     ));
   }
-          // task_data={m.task_data}
-          // message_id={m.message_id}
-          // duration={this.props.is_review ? m.duration : undefined}
 
   render() {
     return (
