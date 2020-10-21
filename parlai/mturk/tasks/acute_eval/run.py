@@ -227,6 +227,7 @@ class AcuteEvaluator(object):
                         's2_choice': self.opt['s2_choice'],
                         'question': self.opt['question'],
                         'is_onboarding': convo_pair['is_onboarding'],
+                        'text': 'this is the text im entering hahahaha'
                         'model_left': {
                             'name': eval_speakers[model_left_idx],
                             'dialogue': convo_pair['dialogue_dicts'][model_left_idx][

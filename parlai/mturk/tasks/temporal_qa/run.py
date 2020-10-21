@@ -212,33 +212,41 @@ class AcuteEvaluator(object):
         with open(pairs_path) as pf:
             for i, l in enumerate(pf.readlines()):
                 convo_pair = json.loads(l.strip())
-                eval_speakers = [
-                    s
-                    for d in convo_pair['dialogue_dicts']
-                    for s in d['speakers']
-                    if s in convo_pair['speakers_to_eval']
-                ]
-                # make sure order is preserved
-                assert eval_speakers == convo_pair['speakers_to_eval']
-                model_left_idx = random.choice([0, 1])
+                # eval_speakers = [
+                #     s
+                #     for d in convo_pair['dialogue_dicts']
+                #     for s in d['speakers']
+                #     if s in convo_pair['speakers_to_eval']
+                # ]
+                # # make sure order is preserved
+                # assert eval_speakers == convo_pair['speakers_to_eval']
+                # model_left_idx = random.choice([0, 1])
+                # task = {
+                #     'task_specs': {
+                #         's1_choice': self.opt['s1_choice'],
+                #         's2_choice': self.opt['s2_choice'],
+                #         'question': self.opt['question'],
+                #         'is_onboarding': convo_pair['is_onboarding'],
+                #         'model_left': {
+                #             'name': eval_speakers[model_left_idx],
+                #             'dialogue': convo_pair['dialogue_dicts'][model_left_idx][
+                #                 'dialogue'
+                #             ],
+                #         },
+                #         'model_right': {
+                #             'name': eval_speakers[1 - model_left_idx],
+                #             'dialogue': convo_pair['dialogue_dicts'][
+                #                 1 - model_left_idx
+                #             ]['dialogue'],
+                #         },
+                #     },
+                #     'pairing_dict': convo_pair,
+                #     'pair_id': i,
+                # }
                 task = {
                     'task_specs': {
-                        's1_choice': self.opt['s1_choice'],
-                        's2_choice': self.opt['s2_choice'],
-                        'question': self.opt['question'],
                         'is_onboarding': convo_pair['is_onboarding'],
-                        'model_left': {
-                            'name': eval_speakers[model_left_idx],
-                            'dialogue': convo_pair['dialogue_dicts'][model_left_idx][
-                                'dialogue'
-                            ],
-                        },
-                        'model_right': {
-                            'name': eval_speakers[1 - model_left_idx],
-                            'dialogue': convo_pair['dialogue_dicts'][
-                                1 - model_left_idx
-                            ]['dialogue'],
-                        },
+                        'messagges': convo_pair['messages']
                     },
                     'pairing_dict': convo_pair,
                     'pair_id': i,

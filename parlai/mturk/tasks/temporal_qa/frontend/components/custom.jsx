@@ -454,7 +454,7 @@ class TaskDescription extends React.Component {
       }
       let num_subtasks = this.props.num_subtasks;
       let cur_index = this.props.current_subtask_index + 1;
-      let question = this.props.task_data.task_specs.question;
+      // let question = this.props.task_data.task_specs.question;
       content = (
         <div>
           <b>You are currently at comparison {cur_index} / {num_subtasks}{" "}</b>
@@ -554,7 +554,43 @@ class TaskDescription extends React.Component {
   }
 }
 
+class MessageList extends React.Component {
+  makeMessages() {
+    let agent_id = this.props.agent_id;
+    let messages = this.props.messages;
+    // Handles rendering messages from both the user and anyone else
+    // on the thread - agent_ids for the sender of a message exist in
+    // the m.id field.
+    let XChatMessage = getCorrectComponent('XChatMessage', this.props.v_id);
+    let onClickMessage = this.props.onClickMessage;
+    if (typeof onClickMessage !== 'function') {
+      onClickMessage = idx => {};
+    }
+    return messages.map((m, idx) => (
+      <div key={m.message_id} onClick={() => onClickMessage(idx)}>
+        <XChatMessage
+          is_self={m.id == agent_id}
+          agent_id={m.id}
+          message={m.text}
+          task_data={m.task_data}
+          message_id={m.message_id}
+          duration={this.props.is_review ? m.duration : undefined}
+        />
+      </div>
+    ));
+  }
+
+  render() {
+    return (
+      <div id="message_thread" style={{ width: '100%' }}>
+        {this.makeMessages()}
+      </div>
+    );
+  }
+}
+
 export default {
+  XMessageList: { default: MessageList },
   XEvalResponse: { default: EvalResponse },
   XResponsePane: { default: ResponsePane },
   XContentPane: { default: PairwiseEvalPane },

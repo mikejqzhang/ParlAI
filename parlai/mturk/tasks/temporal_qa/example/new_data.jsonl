@@ -1,0 +1,8 @@
+{"is_onboarding": true, "correct_answer": "modela", "tags": ["onboarding1"], "messages": [{"id": "modela", "text": "Hello how are you?"}]}
+{"is_onboarding": false, "tags": ["example1"], "messages": [{"id": "human_evaluator", "text": "I'm well, how about yourself?"}]}
+{"is_onboarding": false, "tags": ["example2"], "messages": [{"id": "modela", "text": "Good, just reading a book."}]}
+{"is_onboarding": false, "tags": ["example3"], "messages": [{"id": "human_evaluator", "text": "What book are you reading?"}]}
+{"is_onboarding": false, "tags": ["example4"], "messages": [{"id": "modela", "text": "An English textbook. Do you like to read?"}]}
+{"is_onboarding": false, "tags": ["example5"], "messages": [{"id": "human_evaluator", "text": "Yes, I really enjoy reading, but my favorite thing to do is dog walking."}]}
+{"is_onboarding": false, "tags": ["example6"], "messages": [{"id": "modela", "text": "Do you have a dog? I don't have any pets"}]}
+{"is_onboarding": false, "tags": ["example7"], "messages": [{"id": "human_evaluator", "text": "Yes, I have a labrador poodle mix."}]}
