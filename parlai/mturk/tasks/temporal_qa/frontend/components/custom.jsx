@@ -430,11 +430,11 @@ class TaskDescription extends React.Component {
               <td><div style={button_style}>Yes</div></td>
               <td>The Olympics are held in a different city every 4 years</td>
               <td>
-                <b>Beijing</b> as of <b>2018</b>
+                The current answer is <b>Beijing</b> as of <b>2018</b>
                 <br />
-                <b>PyeongChang</b> as of <b>2014</b>
+                The previous answer was <b>PyeongChang</b> as of <b>2014</b>
                 <br />
-                <b>Sochi</b> as of <b>2012</b>
+                The answer before that was <b>Sochi</b> as of <b>2012</b>
               </td>
             </tr>
             <tr>
@@ -442,22 +442,33 @@ class TaskDescription extends React.Component {
               <td><div style={button_style}>Yes</div></td>
               <td>Jeremy Lin has</td>
               <td>
-                <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
+                The current answer is the <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
                 <br />
-                <b>Toronto Raptors</b> as of <b>February 13, 2019</b>
+                The previous answer was the <b>Toronto Raptors</b> as of <b>February 13, 2019</b>
                 <br />
-                <b>Atlanta Hawks</b> as of <b>July 13, 2018</b>
+                The answer before that was <b>Atlanta Hawks</b> as of <b>July 13, 2018</b>
               </td>
             </tr>
             <tr>
               <td>Has the US ever had a female president?</td>
               <td><div style={button_style}>Yes</div></td>
               <td>The answer to this question may change in the future.
-                  The "as of" date for the most recent answer should be
-                  left <b>blank</b> since <b>No</b> has always been the answer as of now.
+                  The "as of" date for the most recent answer should be left <b>blank</b>
+                  since <b>No</b> has always been the answer as of now.
               </td>
               <td>
-                <b>No</b> as of <b>___</b>
+                The current answer is <b>No</b> as of <b>___</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Has the US ever had a female president?</td>
+              <td><div style={button_style}>Yes</div></td>
+              <td>The answer to this question may change in the future.
+                  The "as of" date for the most recent answer should be left <b>blank</b>
+                  since <b>No</b> has always been the answer as of now.
+              </td>
+              <td>
+                The current answer is <b>No</b> as of <b>___</b>
               </td>
             </tr>
             <tr>
@@ -595,8 +606,19 @@ class TaskDescription extends React.Component {
                 <td>Has the US ever had a female president?</td>
                 <td><div style={button_style}>Yes</div></td>
                 <td>The answer to this question may change in the future.
-                    The "as of" date for the most recent answer should be
-                    left <b>blank</b> since <b>No</b> has always been the answer as of now.
+                    The "as of" date for the most recent answer should be left <b>blank</b>
+                    since <b>No</b> has always been the answer as of now.
+                </td>
+                <td>
+                  The current answer is <b>No</b> as of <b>___</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Has the US ever had a female president?</td>
+                <td><div style={button_style}>Yes</div></td>
+                <td>The answer to this question may change in the future.
+                    The "as of" date for the most recent answer should be left <b>blank</b>
+                    since <b>No</b> has always been the answer as of now.
                 </td>
                 <td>
                   The current answer is <b>No</b> as of <b>___</b>
