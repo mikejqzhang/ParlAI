@@ -120,8 +120,8 @@ class EvalResponse extends React.Component {
     ) {
       return <div></div>;
     }
-    let form_question = "Has the answer to the question above changed in the past or is it plausible that it will change in the future?";
-    let text_question = "If the answer to the question above has changed, please enter the current and previous two answers below along with when the answers changed.";
+    let form_question = "Part 1) Has the answer to the question above changed in the past or is it plausible that it will change in the future?";
+    let text_question = "Part 2) If you answered \"Yes\" to Part 1, enter the three most recent answers below along with when the answers changed.";
     let text_reason = (
       <div>
         <ControlLabel>{text_question}</ControlLabel>
@@ -388,10 +388,9 @@ class TaskDescription extends React.Component {
     let question = this.props.task_description.question;
     let content = (
       <div>
-        In this task, you will be provided with a question and be asked to
+        <b>Part 1)</b> In this task, you will be provided with a question and be asked to
         determine if its answer <b>has ever changed</b> in the past or if it's plausible
         that it <b>will change</b> in the future.
-        <br />
         <br />
         To respond, you will select one of
         the following three options:
@@ -406,16 +405,23 @@ class TaskDescription extends React.Component {
             <div style={button_style}>Maybe</div>: This should include questions where the answer <b>changes based on opinion</b>. You may also select this option if you are <b>unsure of the answer</b>.
           </li>
         </ul>
-        If the you select <div style={button_style}>Yes</div> for the first response,
+        <br />
+        <b>Part 2)</b> If the you selected <div style={button_style}>Yes</div> for the <b>Part 1)</b>,
         you will also be asked to provide the most recent answers and when they started to apply,
         up to the third most recent answer.
-        If it's unclear when an answer started to apply, leave the "as of" date blank.
         <br />
-        In the examples below, the <b>bolded</b> text is what you should provide for
-        second response.
+        You will often have to perform a quick wikipedia search to find this information.
+        If the answer or date do not exist or are still unclear after your initial search, you may leave these fields blank (see <b>Examples</b> below).
         <br />
-        <h3>Explanations and Examples:</h3>
-        <Table striped bordered hover size="sm">
+        <br />
+        <b>You will do this for {num_subtasks} questions</b>.
+        <br />
+        <b>After you're done with both parts for a question,
+           use the [NEXT] button at the bottom of this instructions panel to move on.</b>
+        <br />
+        <h3>Examples:</h3>
+        The expected responses for the most recent answers and dates when they apply are <b>bolded</b> in the <b>Answer Changes?</b>.
+        <Table bordered hover size="sm">
           <thead>
             <tr>
               <th>Question</th>
@@ -440,7 +446,7 @@ class TaskDescription extends React.Component {
             <tr>
               <td>Who does Jeremy Lin play for?</td>
               <td><div style={button_style}>Yes</div></td>
-              <td>Jeremy Lin has</td>
+              <td>Jeremy Lin, an NBA player, most recently played for the following teams.</td>
               <td>
                 The current answer is the <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
                 <br />
@@ -453,80 +459,83 @@ class TaskDescription extends React.Component {
               <td>Has the US ever had a female president?</td>
               <td><div style={button_style}>Yes</div></td>
               <td>The answer to this question may change in the future.
-                  The "as of" date for the most recent answer should be left <b>blank</b>
-                  since <b>No</b> has always been the answer as of now.
+                  <br />
+                  The "as of" date for the most recent answer should be
+                  left blank since there is no clear start date.
               </td>
               <td>
-                The current answer is <b>No</b> as of <b>___</b>
+                The current answer is <b>No</b>
               </td>
             </tr>
             <tr>
-              <td>Has the US ever had a female president?</td>
+              <td>Who has the highest minimum wage in the usa?</td>
               <td><div style={button_style}>Yes</div></td>
-              <td>The answer to this question may change in the future.
-                  The "as of" date for the most recent answer should be left <b>blank</b>
-                  since <b>No</b> has always been the answer as of now.
+              <td>The answer to this question can change and likely has changed in the past,
+                  <br />
+                  but it's easily identifiable from a wikipedia search
+                  and therefore the most recent answers may be left blank.
               </td>
               <td>
-                The current answer is <b>No</b> as of <b>___</b>
+              </td>
+            </tr>
+            <tr>
+              <td>What movies did Adam Sandler play in?</td>
+              <td><div style={button_style}>Yes</div></td>
+              <td>What should we do here?</td>
+              <td>
+                What should we do here?
               </td>
             </tr>
             <tr>
               <td>Where was Dwight Howard born?</td>
               <td><div style={button_style}>No</div></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Who did Russians descend from?</td>
-              <td><div style={button_style}>No</div></td>
-              <td></td>
+              <td>This answer does not change because being born is a one-time event.</td>
               <td></td>
             </tr>
             <tr>
-              <td>What is British Columbia?</td>
+              <td>The most common type of rock in Earth's crust is?</td>
               <td><div style={button_style}>No</div></td>
+              <td>It's unlikely that the answer to this question will change.</td>
               <td></td>
+            </tr>
+            <tr>
+              <td>Who played Benjamin Button as an old man?</td>
+              <td><div style={button_style}>No</div></td>
+              <td>This answer does not change since the actor has not and will not change.</td>
               <td></td>
             </tr>
             <tr>
               <td>Who did the Baltimore Ravens draft in 2011?</td>
               <td><div style={button_style}>No</div></td>
-              <td></td>
+              <td>Because a date is specified in the question, the answer does not change.</td>
               <td></td>
             </tr>
             <tr>
               <td>Who was Michael Jackson's best friend?</td>
               <td><div style={button_style}>Maybe</div></td>
-              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td>The there isn't a definintive answer to this question.</td>
               <td></td>
             </tr>
+              <tr>
+                <td>Which airport to fly in Rome?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>The answer to this question is unclear and is a matter of opinon.</td>
+                <td></td>
+              </tr>
             <tr>
               <td>What is there to do in Laredo TX?</td>
               <td><div style={button_style}>Maybe</div></td>
-              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td>The answer to this question is a matter of opion.</td>
               <td></td>
             </tr>
             <tr>
-              <td>Which airport to fly in Rome?</td>
+              <td>What is the record for January?</td>
               <td><div style={button_style}>Maybe</div></td>
-              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>What form of government does Greece use?</td>
-              <td><div style={button_style}>Maybe</div></td>
-              <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
+              <td>This question to too vague to answer.</td>
               <td></td>
             </tr>
           </tbody>
         </Table>
-        <b>
-          You will do this for {num_subtasks} questions.
-          Use the [NEXT] button when you're done with each judgment.
-        </b>
-        <br />
-        <br />
         <h4>Please accept the task if you're ready.</h4>
       </div>
     );
@@ -541,10 +550,9 @@ class TaskDescription extends React.Component {
           <b>You are currently at comparison {cur_index} / {num_subtasks}{" "}</b>
           <br />
           <br />
-          In this task, you will be provided with a question and be asked to
+          <b>Part 1)</b> In this task, you will be provided with a question and be asked to
           determine if its answer <b>has ever changed</b> in the past or if it's plausible
           that it <b>will change</b> in the future.
-          <br />
           <br />
           To respond, you will select one of
           the following three options:
@@ -559,30 +567,38 @@ class TaskDescription extends React.Component {
               <div style={button_style}>Maybe</div>: This should include questions where the answer <b>changes based on opinion</b>. You may also select this option if you are <b>unsure of the answer</b>.
             </li>
           </ul>
-          If the you select <div style={button_style}>Yes</div> for the first response,
+          <br />
+          <b>Part 2)</b> If the you selected <div style={button_style}>Yes</div> for the <b>Part 1)</b>,
           you will also be asked to provide the most recent answers and when they started to apply,
           up to the third most recent answer.
-          If it's unclear when an answer started to apply, leave the "as of" date blank.
           <br />
-          In the examples below, the <b>bolded</b> text is what you should provide for
-          second response.
+          You will often have to perform a quick wikipedia search to find this information.
+          If the answer or date do not exist or are still unclear after your initial search, you may leave these fields blank (see <b>Examples</b> below).
           <br />
-          <h3>Explanations and Examples:</h3>
-          <Table striped bordered hover size="sm">
+          <br />
+          <b>After you're done with both parts for a question,
+             use the [NEXT] button at the bottom of this instructions panel to move on.</b>
+          <br />
+          <h3>Examples:</h3>
+          The expected responses for the most recent answers and dates when they apply are <b>bolded</b> in the <b>Answer Changes?</b>.
+          <Table bordered hover size="sm">
             <thead>
               <tr>
                 <th>Question</th>
                 <th>Answer Changes?</th>
-                <th>Explanation</th>
-                <th>Most Recent Answers</th>
+                <th>Explanation & Most Recent Answers</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>What city is the next winter olympics in?</td>
                 <td><div style={button_style}>Yes</div></td>
-                <td>The Olympics are held in a different city every 4 years</td>
                 <td>
+                  The Olympics are held in a different city every 4 years
+                  <br />
+                  <br />
+                  <b>Most Recent Answers:</b>
+                  <br />
                   The current answer is <b>Beijing</b> as of <b>2018</b>
                   <br />
                   The previous answer was <b>PyeongChang</b> as of <b>2014</b>
@@ -593,8 +609,12 @@ class TaskDescription extends React.Component {
               <tr>
                 <td>Who does Jeremy Lin play for?</td>
                 <td><div style={button_style}>Yes</div></td>
-                <td>Jeremy Lin has</td>
                 <td>
+                  Jeremy Lin, an NBA player, most recently played for the following teams.
+                  <br />
+                  <br />
+                  <b>Most Recent Answers:</b>
+                  <br />
                   The current answer is the <b>Beijing Ducks</b> as of <b>August 27, 2019</b>
                   <br />
                   The previous answer was the <b>Toronto Raptors</b> as of <b>February 13, 2019</b>
@@ -605,79 +625,72 @@ class TaskDescription extends React.Component {
               <tr>
                 <td>Has the US ever had a female president?</td>
                 <td><div style={button_style}>Yes</div></td>
-                <td>The answer to this question may change in the future.
-                    The "as of" date for the most recent answer should be left <b>blank</b>
-                    since <b>No</b> has always been the answer as of now.
-                </td>
                 <td>
-                  The current answer is <b>No</b> as of <b>___</b>
+                  The answer to this question may change in the future.
+                  The "as of" date for the most recent answer should be left blank since there is no clear start date.
+                  <br />
+                  <br />
+                  <b>Most Recent Answers:</b>
+                  <br />
+                  The current answer is <b>No</b>
                 </td>
               </tr>
               <tr>
-                <td>Has the US ever had a female president?</td>
+                <td>Who has the highest minimum wage in the usa?</td>
                 <td><div style={button_style}>Yes</div></td>
-                <td>The answer to this question may change in the future.
-                    The "as of" date for the most recent answer should be left <b>blank</b>
-                    since <b>No</b> has always been the answer as of now.
-                </td>
                 <td>
-                  The current answer is <b>No</b> as of <b>___</b>
+                  The answer to this question can change and likely has changed in the past,
+                  but it's easily identifiable from a wikipedia search
+                  and therefore the most recent answers may be left blank.
                 </td>
+              </tr>
+              <tr>
+                <td>What movies did Adam Sandler play in?</td>
+                <td><div style={button_style}>Yes</div></td>
+                <td><b>What should we do here?</b></td>
               </tr>
               <tr>
                 <td>Where was Dwight Howard born?</td>
                 <td><div style={button_style}>No</div></td>
-                <td></td>
-                <td></td>
+                <td>This answer does not change because being born is a one-time event.</td>
               </tr>
               <tr>
-                <td>Who did Russians descend from?</td>
+                <td>The most common type of rock in Earth's crust is?</td>
                 <td><div style={button_style}>No</div></td>
-                <td></td>
-                <td></td>
+                <td>It's unlikely that the answer to this question will change.</td>
               </tr>
               <tr>
-                <td>What is British Columbia?</td>
+                <td>Who played Benjamin Button as an old man?</td>
                 <td><div style={button_style}>No</div></td>
-                <td></td>
-                <td></td>
+                <td>This answer does not change since the actor has not and will not change.</td>
               </tr>
               <tr>
                 <td>Who did the Baltimore Ravens draft in 2011?</td>
                 <td><div style={button_style}>No</div></td>
-                <td></td>
-                <td></td>
+                <td>Because a date is specified in the question, the answer does not change.</td>
               </tr>
               <tr>
                 <td>Who was Michael Jackson's best friend?</td>
                 <td><div style={button_style}>Maybe</div></td>
-                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>What is there to do in Laredo TX?</td>
-                <td><div style={button_style}>Maybe</div></td>
-                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
-                <td></td>
+                <td>The there isn't a definintive answer to this question.</td>
               </tr>
               <tr>
                 <td>Which airport to fly in Rome?</td>
                 <td><div style={button_style}>Maybe</div></td>
-                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
-                <td></td>
+                <td>The answer to this question is unclear and is a matter of opinon.</td>
               </tr>
               <tr>
-                <td>What form of government does Greece use?</td>
+                <td>What is there to do in Laredo TX?</td>
                 <td><div style={button_style}>Maybe</div></td>
-                <td>The answer to this question is a matter of opion, and there isn't a definintive answer</td>
-                <td></td>
+                <td>The answer to this question is a matter of opinon.</td>
+              </tr>
+              <tr>
+                <td>What is the record for January?</td>
+                <td><div style={button_style}>Maybe</div></td>
+                <td>This question to too vague to answer.</td>
               </tr>
             </tbody>
           </Table>
-          <b>
-            You will do this for {num_subtasks} questions.
-            Use the [NEXT] button when you're done with each judgment.
-          </b>
           <br />
           <br />
         </div>
@@ -733,10 +746,119 @@ class MessageList extends React.Component {
   }
 }
 
+class LeftPane extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { current_pane: 'instruction', last_update: 0 };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      nextProps.task_data !== undefined &&
+      nextProps.task_data.last_update !== undefined &&
+      nextProps.task_data.last_update > prevState.last_update
+    ) {
+      return {
+        current_pane: 'context',
+        last_update: nextProps.task_data.last_update,
+      };
+    } else return null;
+  }
+
+  render() {
+    let v_id = this.props.v_id;
+    let frame_height = this.props.frame_height;
+    let frame_style = {
+      height: frame_height + 'px',
+      backgroundColor: '#dff0d8',
+      padding: '30px',
+      overflow: 'auto',
+    };
+    let XTaskDescription = getCorrectComponent('XTaskDescription', v_id);
+    let pane_size = this.props.is_cover_page ? 'col-xs-12' : 'col-xs-6';
+    let has_context = this.props.task_data.has_context;
+    if (this.props.is_cover_page || !has_context) {
+      return (
+        <div id="left-pane" className={pane_size} style={frame_style}>
+          <XTaskDescription {...this.props} />
+          {this.props.children}
+        </div>
+      );
+    } else {
+      let XContextView = getCorrectComponent('XContextView', v_id);
+      // In a 2 panel layout, we need to tabulate the left pane to be able
+      // to display both context and instructions
+      let nav_items = [
+        <NavItem
+          eventKey={'instruction'}
+          key={'instruction-selector'}
+          title={'Task Instructions'}
+        >
+          {'Task Instructions'}
+        </NavItem>,
+        <NavItem
+          eventKey={'context'}
+          key={'context-selector'}
+          title={'Context'}
+        >
+          {'Context'}
+        </NavItem>,
+      ];
+      let display_instruction = {
+        backgroundColor: '#dff0d8',
+        padding: '10px 20px 20px 20px',
+        flex: '1 1 auto',
+      };
+      let display_context = {
+        backgroundColor: '#dff0d8',
+        padding: '10px 20px 20px 20px',
+        flex: '1 1 auto',
+      };
+      if (this.state.current_pane == 'context') {
+        display_instruction.display = 'none';
+      } else {
+        display_context.display = 'none';
+      }
+      let nav_panels = [
+        <div style={display_instruction} key={'instructions-display'}>
+          <XTaskDescription {...this.props} />
+        </div>,
+        <div style={display_context} key={'context-display'}>
+          <XContextView {...this.props} />
+        </div>,
+      ];
+
+      let frame_style = {
+        height: frame_height + 'px',
+        backgroundColor: '#eee',
+        padding: '10px 0px 0px 0px',
+        overflow: 'auto',
+        display: 'flex',
+        flexFlow: 'column',
+      };
+
+      return (
+        <div id="left-pane" className={pane_size} style={frame_style}>
+          <Nav
+            bsStyle="tabs"
+            activeKey={this.state.current_pane}
+            onSelect={key => this.setState({ current_pane: key })}
+          >
+            {nav_items}
+          </Nav>
+          {nav_panels}
+          {this.props.children}
+        </div>
+      );
+    }
+  }
+}
+
 export default {
   XMessageList: { default: MessageList },
   XEvalResponse: { default: EvalResponse },
   XResponsePane: { default: ResponsePane },
   XContentPane: { default: PairwiseEvalPane },
-  XTaskDescription: { default: TaskDescription }
+  XTaskDescription: { default: TaskDescription },
+  XLeftPane: { default: LeftPane }
 };
